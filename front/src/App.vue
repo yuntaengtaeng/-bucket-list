@@ -1,30 +1,61 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
-  <router-view />
+  <div class="wrap">
+    <div class="margin"></div>
+    <div class="container">
+      <BaseHeader />
+      <router-view />
+    </div>
+    <div class="margin"></div>
+  </div>
 </template>
 
+<script lang="ts">
+import { defineComponent } from "vue";
+import BaseHeader from "./components/BaseHeader.vue";
+
+export default defineComponent({
+  name: "App",
+  components: {
+    BaseHeader,
+  },
+});
+</script>
+
 <style lang="scss">
-#app {
+* {
   font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+  box-sizing: border-box;
 }
 
-nav {
-  padding: 30px;
+#app {
+  width: 100vw;
+  height: 100vh;
+}
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
+body {
+  margin: 0;
+}
 
-    &.router-link-exact-active {
-      color: #42b983;
-    }
+.wrap {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.container {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+
+  @media (min-width: 576px) {
+    max-width: 500px;
   }
+}
+
+.margin {
+  width: auto;
+  flex-grow: 1;
+  background-color: rgb(218, 224, 230);
 }
 </style>
