@@ -30,6 +30,7 @@ export default defineComponent({
 #app {
   width: 100vw;
   height: 100vh;
+  overflow: hidden;
 }
 
 body {
@@ -47,6 +48,14 @@ body {
   display: flex;
   width: 100%;
   flex-direction: column;
+  overflow: scroll;
+
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+
+  &::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera*/
+  }
 
   @media (min-width: 576px) {
     max-width: 500px;
@@ -56,6 +65,6 @@ body {
 .margin {
   width: auto;
   flex-grow: 1;
-  background-color: rgb(218, 224, 230);
+  background-color: #f2f4f7;
 }
 </style>
