@@ -21,6 +21,12 @@ header {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  box-shadow: 0 1px 0 0 rgb(0 0 0 / 10%);
+
+  position: sticky;
+  background-color: #fff;
+  top: 0;
+  z-index: 1;
 
   span {
     font-weight: bold;
