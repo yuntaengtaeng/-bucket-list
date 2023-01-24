@@ -2,7 +2,19 @@ const mongoose = require('mongoose');
 
 const bucketlistSchema = new mongoose.Schema(
   {
-    name: {
+    user_id: {
+      type: String,
+      required: true,
+    },
+    category_id: {
+      type: String,
+      required: true,
+    },
+    title: {
+      type: String,
+      required: true,
+    },
+    context: {
       type: String,
       required: true,
     },
