@@ -28,8 +28,13 @@ functions:
           cors: true
 
       - http:
-          path: /api/main
+          path: /api/main/bucklist/{categoryID}
           method: get
+          cors: true
+
+      - http:
+          path: /api/main/bucklist
+          method: post
           cors: true
 
       - http:
