@@ -14,7 +14,9 @@
       v-model="nickname"
       placeholder="NICKNAME"
     />
-    <CustomButton>회원가입</CustomButton>
+    <CustomButton :disabled="!id || !password || !nickname"
+      >회원가입</CustomButton
+    >
   </form>
 </template>
 <script lang="ts">
@@ -34,10 +36,25 @@ export default defineComponent({
     nickname: "",
   }),
   methods: {
-    onsubmit() {
-      console.log(this.id);
-      console.log(this.nickname);
-      console.log(this.password);
+    async onsubmit() {
+      const body = {
+        id: this.id,
+        password: this.password,
+        nickname: this.nickname,
+      };
+
+      try {
+        const {
+          data: { join },
+        } = await this.$axios.post("api/auth/join", body);
+
+        if (join) {
+          this.$router.push("/login");
+        }
+      } catch (error: any) {
+        //TODO : error type 만들어서 error 처리하기
+        console.error(error);
+      }
     },
   },
 });
