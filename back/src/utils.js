@@ -1,7 +1,7 @@
 module.exports.getToken = (cookie, type) => {
   const token = (cookie || '').split(';').reduce((token, cookie) => {
     const [key, value] = cookie.split('=');
-    if (key === `${type}`) {
+    if (key.trim() === `${type}`) {
       token = value.trim();
     }
 

@@ -22,6 +22,7 @@ const formatCategoryList = (categoryList) => {
 
 app.get('/', async (req, res) => {
   try {
+    console.log(req.headers);
     const oldCategoryList = await categoryModel.find();
     const categoryList = formatCategoryList(oldCategoryList);
 

@@ -1,5 +1,8 @@
+const express = require('express');
 const jwt = require('jsonwebtoken');
 const { getToken } = require('../utils');
+const app = express();
+app.use(express.json());
 
 const verifyToken = (req, res, type) => {
   const authorization = getToken(req.headers.cookie, type);

@@ -1,5 +1,5 @@
 service: bucketlist
-frameworkVersion: '3'
+frameworkVersion: "3"
 
 custom:
   serverless-offline:
@@ -25,17 +25,23 @@ functions:
       - http:
           path: /api/auth/login
           method: post
-          cors: true
+          cors:
+            origin: http://localhost:8080
+            allowCredentials: true
 
       - http:
           path: /api/main/bucklist/{categoryID}
           method: get
-          cors: true
+          cors:
+            origin: http://localhost:8080
+            allowCredentials: true
 
       - http:
           path: /api/main/bucklist
           method: post
-          cors: true
+          cors:
+            origin: http://localhost:8080
+            allowCredentials: true
 
       - http:
           path: /api/category
@@ -45,12 +51,16 @@ functions:
       - http:
           path: /api/token/refresh-token
           method: post
-          cors: true
+          cors:
+            origin: http://localhost:8080
+            allowCredentials: true
 
       - http:
           path: /api/token/verify/refresh-token
           method: post
-          cors: true
+          cors:
+            origin: http://localhost:8080
+            allowCredentials: true
 
 plugins:
   - serverless-dotenv-plugin
