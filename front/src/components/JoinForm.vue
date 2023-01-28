@@ -20,6 +20,8 @@
   </form>
 </template>
 <script lang="ts">
+import { ErrorData } from "../types/service";
+import { AxiosError } from "axios";
 import { defineComponent } from "vue";
 import CustomButton from "./CustomButton.vue";
 import CustomInput from "./CustomInput.vue";
@@ -51,9 +53,12 @@ export default defineComponent({
         if (join) {
           this.$router.push("/login");
         }
-      } catch (error: any) {
-        //TODO : error type 만들어서 error 처리하기
-        console.error(error);
+      } catch (error) {
+        const errorResponse = (error as AxiosError).response;
+        if (errorResponse?.status === 400) {
+          const data = errorResponse.data as ErrorData;
+          alert(data.message);
+        }
       }
     },
   },
