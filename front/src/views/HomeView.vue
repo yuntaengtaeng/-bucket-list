@@ -1,18 +1,179 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App" />
+  <div>
+    <div class="category-items">
+      <CategoryItem
+        v-for="(item, i) in categorys"
+        :key="item.id"
+        :title="item.name"
+        :icon="item.icon"
+        :backgroundColor="backgroundPalette[i]"
+        :isSelected="item.id === selectedCategoryId"
+        @click="onCategoryClickHandler(item.id)"
+      />
+    </div>
+    <BucketTotal
+      :total="count.total"
+      :completed="count.checked"
+      :remaining="count.notChecked"
+    />
+    <div>
+      <MoveEdit />
+    </div>
+    <div>
+      <template v-if="bucketList.length">
+        <BucketItem
+          v-for="item in bucketList"
+          :key="item.id"
+          :data="item"
+          @click.stop="(event) => onBucketItemClickHandler(event, item.id)"
+          @onDeleteHandler="onDeleteHandler"
+          @onCheckboxHandler="onCheckboxHandler"
+        />
+      </template>
+      <template v-else>
+        <Guidance />
+      </template>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import HelloWorld from "@/components/HelloWorld.vue"; // @ is an alias to /src
+
+import { CategoryList, ErrorData, BucketData, Count } from "@/types/service";
+
+import CategoryItem from "@/components/CategoryItem.vue";
+import MoveEdit from "@/components/MoveEdit.vue";
+import BucketItem from "@/components/BucketItem.vue";
+import BucketTotal from "@/components/BucketTotal.vue";
+import Guidance from "@/components/Guidance.vue";
+import { AxiosError } from "axios";
 
 export default defineComponent({
   name: "HomeView",
   components: {
-    HelloWorld,
+    CategoryItem,
+    MoveEdit,
+    BucketItem,
+    BucketTotal,
+    Guidance,
+  },
+  data: () => ({
+    selectedCategoryId: "" as string,
+    backgroundPalette: [
+      "#fef3c7",
+      "#fce7f3",
+      "#fee2e2",
+      "#e0e7ff",
+      "#d1fae5",
+      "#ede9fe",
+    ] as string[],
+    categorys: [] as CategoryList[],
+    bucketList: [] as BucketData[],
+    count: { total: 0, notChecked: 0, checked: 0 } as Count,
+  }),
+  methods: {
+    onCategoryClickHandler(id: string) {
+      this.selectedCategoryId = id;
+    },
+    onBucketItemClickHandler(event: Event, id: string) {
+      const target = event.target as Element;
+
+      if (target.tagName === "INPUT" || target.className === "right") {
+        return;
+      }
+
+      this.$router.push(`/detail/${id}`);
+    },
+    async requestBucketList() {
+      const accessToken = this.$store.getters.getAccessToken;
+      if (!accessToken) {
+        return;
+      }
+
+      try {
+        const {
+          data: { data },
+        } = await this.$axios.get(
+          `/api/main/bucklist/${this.selectedCategoryId}`
+        );
+
+        const bucklist: BucketData[] = data.bucketlist;
+        const count: Count = data.count;
+        this.bucketList = bucklist;
+        this.count = count;
+      } catch (error) {
+        const errorResponse = (error as AxiosError).response;
+        if (errorResponse?.status === 400) {
+          const data = errorResponse.data as ErrorData;
+          alert(data.message);
+        }
+      }
+    },
+    async onCheckboxHandler(id: string) {
+      try {
+        const {
+          data: { data },
+        } = await this.$axios.patch(`/api/main/bucklist/checked/${id}`);
+
+        const bucklist: BucketData[] = data.bucketlist;
+        const count: Count = data.count;
+        this.bucketList = bucklist;
+        this.count = count;
+      } catch (error) {
+        const errorResponse = (error as AxiosError).response;
+        if (errorResponse?.status === 400) {
+          const data = errorResponse.data as ErrorData;
+          alert(data.message);
+        }
+      }
+    },
+    async requestCategoryList() {
+      try {
+        const { data } = await this.$axios.get("/api/category");
+        const categoryList: CategoryList[] = data.categoryList;
+        this.categorys = categoryList;
+      } catch (error) {
+        const errorResponse = (error as AxiosError).response;
+        if (errorResponse?.status === 400) {
+          const data = errorResponse.data as ErrorData;
+          alert(data.message);
+        }
+      }
+    },
+    async onDeleteHandler(id: string) {
+      try {
+        const {
+          data: { data },
+        } = await this.$axios.delete(`/api/main/bucklist/deleted/${id}`);
+
+        const bucklist: BucketData[] = data.bucketlist;
+        const count: Count = data.count;
+        this.bucketList = bucklist;
+        this.count = count;
+      } catch (error) {
+        const errorResponse = (error as AxiosError).response;
+        if (errorResponse?.status === 400) {
+          const data = errorResponse.data as ErrorData;
+          alert(data.message);
+        }
+      }
+    },
+  },
+  watch: {
+    selectedCategoryId: "requestBucketList",
+  },
+  created() {
+    this.requestCategoryList();
   },
 });
 </script>
+
+<style scoped lang="scss">
+.category-items {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+</style>
