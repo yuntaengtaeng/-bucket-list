@@ -37,6 +37,13 @@ functions:
             allowCredentials: true
 
       - http:
+          path: /api/main/bucklist/{bucketlistID}
+          method: delete
+          cors:
+            origin: http://localhost:8080
+            allowCredentials: true
+
+      - http:
           path: /api/main/bucklist
           method: post
           cors:

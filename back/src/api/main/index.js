@@ -43,10 +43,7 @@ app.post("/bucklist", verifyAccessToken, async (req, res) => {
   try {
     await createBucklist.save();
 
-    const oldBucketlist = await bucketlistModel.find({ user_id: id });
-    const bucketlist = formatBucketlist(oldBucketlist);
-
-    res.status(200).json({ bucketlist });
+    res.status(200).json({ posted: true });
   } catch (err) {
     res.status(500).json({ message: "서버요청 실패" });
   }
@@ -68,6 +65,22 @@ app.get("/bucklist/:categoryID", verifyAccessToken, async (req, res) => {
     const bucketlist = formatBucketlist(oldBucketlist);
 
     res.status(200).json({ bucketlist });
+  } catch (err) {
+    res.status(500).json({ message: "서버요청 실패" });
+  }
+});
+
+app.delete("/bucklist/:buckletistID", verifyAccessToken, async (req, res) => {
+  const buckletistID = req.params.buckletistID;
+  const id = res.locals.id;
+
+  try {
+    await bucketlistModel.deleteOne({
+      _id: buckletistID,
+      user_id: id,
+    });
+
+    res.status(200).json({ deleted: true });
   } catch (err) {
     res.status(500).json({ message: "서버요청 실패" });
   }
