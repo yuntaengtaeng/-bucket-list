@@ -26,6 +26,11 @@ const routes: Array<RouteRecordRaw> = [
       needsAuth: true,
     },
   },
+  {
+    path: "/detail/:id",
+    name: "detail",
+    component: () => import("../views/DetailView.vue"),
+  },
 ];
 
 const router = createRouter({
