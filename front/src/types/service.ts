@@ -12,3 +12,17 @@ export interface CategoryList {
   name: string;
   icon: string;
 }
+
+export interface BucketData {
+  categoryID: string;
+  context: string;
+  title: string;
+  id: string;
+  isChecked?: boolean;
+}
+
+export interface Count {
+  total: number;
+  notChecked: number;
+  checked: number;
+}
