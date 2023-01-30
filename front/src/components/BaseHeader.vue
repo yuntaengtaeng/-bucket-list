@@ -1,7 +1,11 @@
 <template>
   <header>
-    <span>📃bucket</span>
-    <router-link to="/login">로그인</router-link>
+    <span @click="homeClickHandler">📃bucket</span>
+    <router-link to="/login" v-if="!IsLoggedIn">로그인</router-link>
+    <div v-else class="right">
+      <div>{{ nickname }}</div>
+      <div @click="logoutHandler">로그아웃</div>
+    </div>
   </header>
 </template>
 <script lang="ts">
@@ -9,6 +13,22 @@ import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "base-header",
+  computed: {
+    IsLoggedIn() {
+      return this.$store.getters.getIsLoggedIn;
+    },
+    nickname() {
+      return this.$store.getters.getNickname;
+    },
+  },
+  methods: {
+    logoutHandler() {
+      this.$store.commit("initData");
+    },
+    homeClickHandler() {
+      this.$router.push("/");
+    },
+  },
 });
 </script>
 
@@ -31,6 +51,20 @@ header {
   span {
     font-weight: bold;
     font-size: 26px;
+  }
+
+  a {
+    color: #000;
+    text-decoration: none;
+  }
+
+  .right {
+    display: flex;
+    align-items: center;
+
+    > div:first-child {
+      margin-right: 16px;
+    }
   }
 }
 </style>
