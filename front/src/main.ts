@@ -52,7 +52,7 @@ axios.interceptors.response.use(
 
         const {
           data: { data },
-        } = await axios.post("/refresh-token");
+        } = await axios.post("/api/token/refresh-token");
         store.commit("setAccessToken", data.accessToken);
 
         return axios(originalRequest);
