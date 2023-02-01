@@ -10,6 +10,7 @@ export const store = createStore<UserInfo>({
   state: {
     nickname: "",
     accessToken: "",
+    refreshTokenKey: "",
   },
   getters: {
     getIsLoggedIn(state) {
@@ -21,15 +22,20 @@ export const store = createStore<UserInfo>({
     getAccessToken(state) {
       return state.accessToken;
     },
+    getRefreshTokenKey(state) {
+      return state.refreshTokenKey;
+    },
   },
   mutations: {
     setData(state, value) {
       state.nickname = value.nickname;
       state.accessToken = value.accessToken;
+      state.refreshTokenKey = value.refreshTokenKey;
     },
     initData(state) {
       state.nickname = "";
       state.accessToken = "";
+      state.refreshTokenKey = "";
     },
     setAccessToken(state, accessToken) {
       state.accessToken = accessToken;

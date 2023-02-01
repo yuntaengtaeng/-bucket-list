@@ -5,6 +5,7 @@ export interface ErrorData {
 export interface UserInfo {
   nickname: string;
   accessToken: string;
+  refreshTokenKey: string;
 }
 
 export interface CategoryList {

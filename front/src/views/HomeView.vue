@@ -85,18 +85,20 @@ export default defineComponent({
 
       this.$router.push(`/detail/${id}`);
     },
-    async requestBucketList() {
-      const accessToken = this.$store.getters.getAccessToken;
-      if (!accessToken) {
-        return;
-      }
-
+    async processAfterRequestFromServer({
+      url,
+      method,
+    }: {
+      url: string;
+      method: string;
+    }) {
       try {
         const {
           data: { data },
-        } = await this.$axios.get(
-          `/api/main/bucklist/${this.selectedCategoryId}`
-        );
+        } = await this.$axios({
+          url,
+          method,
+        });
 
         const bucklist: BucketData[] = data.bucketlist;
         const count: Count = data.count;
@@ -110,23 +112,22 @@ export default defineComponent({
         }
       }
     },
-    async onCheckboxHandler(id: string) {
-      try {
-        const {
-          data: { data },
-        } = await this.$axios.patch(`/api/main/bucklist/checked/${id}`);
-
-        const bucklist: BucketData[] = data.bucketlist;
-        const count: Count = data.count;
-        this.bucketList = bucklist;
-        this.count = count;
-      } catch (error) {
-        const errorResponse = (error as AxiosError).response;
-        if (errorResponse?.status === 400) {
-          const data = errorResponse.data as ErrorData;
-          alert(data.message);
-        }
+    async requestBucketList() {
+      const accessToken = this.$store.getters.getAccessToken;
+      if (!accessToken) {
+        return;
       }
+
+      this.processAfterRequestFromServer({
+        url: `/api/main/bucklist/${this.selectedCategoryId}`,
+        method: "get",
+      });
+    },
+    async onCheckboxHandler(id: string) {
+      this.processAfterRequestFromServer({
+        url: `/api/main/bucklist/checked/${id}`,
+        method: "patch",
+      });
     },
     async requestCategoryList() {
       try {
@@ -142,22 +143,10 @@ export default defineComponent({
       }
     },
     async onDeleteHandler(id: string) {
-      try {
-        const {
-          data: { data },
-        } = await this.$axios.delete(`/api/main/bucklist/deleted/${id}`);
-
-        const bucklist: BucketData[] = data.bucketlist;
-        const count: Count = data.count;
-        this.bucketList = bucklist;
-        this.count = count;
-      } catch (error) {
-        const errorResponse = (error as AxiosError).response;
-        if (errorResponse?.status === 400) {
-          const data = errorResponse.data as ErrorData;
-          alert(data.message);
-        }
-      }
+      this.processAfterRequestFromServer({
+        url: `/api/main/bucklist/deleted/${id}`,
+        method: "delete",
+      });
     },
   },
   watch: {
