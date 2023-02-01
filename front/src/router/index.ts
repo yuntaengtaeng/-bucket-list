@@ -30,6 +30,9 @@ const routes: Array<RouteRecordRaw> = [
     path: "/detail/:id",
     name: "detail",
     component: () => import("../views/DetailView.vue"),
+    meta: {
+      needsAuth: true,
+    },
   },
 ];
 
