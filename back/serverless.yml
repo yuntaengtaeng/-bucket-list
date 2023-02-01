@@ -1,4 +1,4 @@
-service: bucketlist
+service: bucketlist-api-1
 frameworkVersion: "3"
 
 custom:
@@ -25,49 +25,61 @@ functions:
       - http:
           path: /api/auth/login
           method: post
-          cors:
-            origin: http://localhost:8080
-            allowCredentials: true
+          cors: true
 
       - http:
           path: /api/main/bucklist/{categoryID}
           method: get
           cors:
-            origin: http://localhost:8080
+            origin: https://yuntaengtaeng.github.io
             allowCredentials: true
 
       - http:
-          path: /api/main/bucklist/{bucketlistID}
+          path: /api/main/bucklist/detail/{bucketlistID}
+          method: get
+          cors:
+            origin: https://yuntaengtaeng.github.io
+            allowCredentials: true
+
+      - http:
+          path: /api/main/bucklist/deleted/{bucketlistID}
           method: delete
           cors:
-            origin: http://localhost:8080
+            origin: https://yuntaengtaeng.github.io
+            allowCredentials: true
+
+      - http:
+          path: /api/main/bucklist/patch/{bucketlistID}
+          method: patch
+          cors:
+            origin: https://yuntaengtaeng.github.io
+            allowCredentials: true
+
+      - http:
+          path: /api/main/bucklist/checked/{bucketlistID}
+          method: patch
+          cors:
+            origin: https://yuntaengtaeng.github.io
             allowCredentials: true
 
       - http:
           path: /api/main/bucklist
           method: post
           cors:
-            origin: http://localhost:8080
+            origin: https://yuntaengtaeng.github.io
+            allowCredentials: true
+
+      - http:
+          path: /api/token/refresh-token
+          method: post
+          cors:
+            origin: https://yuntaengtaeng.github.io
             allowCredentials: true
 
       - http:
           path: /api/category
           method: get
           cors: true
-
-      - http:
-          path: /api/token/refresh-token
-          method: post
-          cors:
-            origin: http://localhost:8080
-            allowCredentials: true
-
-      - http:
-          path: /api/token/verify/refresh-token
-          method: post
-          cors:
-            origin: http://localhost:8080
-            allowCredentials: true
 
 plugins:
   - serverless-dotenv-plugin
