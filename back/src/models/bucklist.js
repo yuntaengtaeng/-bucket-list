@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const bucketlistSchema = new mongoose.Schema(
   {
@@ -18,10 +18,15 @@ const bucketlistSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    is_checked: {
+      type: Boolean,
+      require: true,
+      default: false,
+    },
   },
   { versionKey: false }
 );
 
-const bucketlistModel = mongoose.model('bucketlist', bucketlistSchema);
+const bucketlistModel = mongoose.model("bucketlist", bucketlistSchema);
 
 module.exports = bucketlistModel;
