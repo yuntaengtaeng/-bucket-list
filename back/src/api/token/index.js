@@ -20,7 +20,7 @@ mongoose.connect(MONGODB_URI, { dbName: "bucket", useNewUrlParser: true });
 app.post("/refresh-token", verifyRefreshToken, async (req, res) => {
   const id = res.locals.id;
   try {
-    const { user_id, nickname } = await userModel.findOne({ user_id: id });
+    const { user_id } = await userModel.findOne({ user_id: id });
 
     if (!user_id) {
       Promise.reject();
@@ -35,22 +35,10 @@ app.post("/refresh-token", verifyRefreshToken, async (req, res) => {
     res.status(200).json({
       data: {
         accessToken,
-        nickname,
       },
     });
   } catch (error) {
     return res.status(404).json({ message: "가입되지 않은 회원입니다." });
-  }
-});
-
-app.post("/verify/refresh-token", (req, res) => {
-  const response = verifyToken(req, res, "refresh");
-  const { isOk } = response;
-
-  if (isOk) {
-    res.status(200).json({ isValid: true });
-  } else {
-    res.status(401).json({ isValid: false });
   }
 });
 

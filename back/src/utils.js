@@ -1,12 +1,8 @@
-module.exports.getToken = (cookie, type) => {
-  const token = (cookie || '').split(';').reduce((token, cookie) => {
-    const [key, value] = cookie.split('=');
-    if (key.trim() === `${type}`) {
-      token = value.trim();
-    }
-
-    return token;
-  }, '');
+module.exports.getToken = (tokenInfo, tokenKey) => {
+  const [key, value] = tokenInfo.split("~");
+  if (key.trim() === `${tokenKey}`) {
+    token = value.trim();
+  }
 
   return token;
 };
