@@ -49,10 +49,19 @@ axios.interceptors.response.use(
     if (status === 419) {
       if (error.response.data.code === "expired") {
         const originalRequest = config;
+        const refreshTokenKey = store.getters.getRefreshTokenKey;
 
         const {
           data: { data },
-        } = await axios.post("/api/token/refresh-token");
+        } = await axios.post(
+          "/api/token/refresh-token",
+          {},
+          {
+            headers: {
+              refreshTokenKey: `${process.env.VUE_APP_ACCESS_TOKEN_KEY} ${refreshTokenKey}`,
+            },
+          }
+        );
         store.commit("setAccessToken", data.accessToken);
 
         return axios(originalRequest);
