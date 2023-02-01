@@ -1,14 +1,16 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const categoryModel = require('../../models/caregory');
-const cors = require('cors');
+const express = require("express");
+const mongoose = require("mongoose");
+const categoryModel = require("../../models/caregory");
+const cors = require("cors");
 const app = express();
 const MONGODB_URI = process.env.MONGODB_URI;
-app.use(cors());
 
-mongoose.set('strictQuery', false);
+app.use(cors());
+app.use(express.json());
+
+mongoose.set("strictQuery", false);
 mongoose.Promise = global.Promise;
-mongoose.connect(MONGODB_URI, { dbName: 'bucket', useNewUrlParser: true });
+mongoose.connect(MONGODB_URI, { dbName: "bucket", useNewUrlParser: true });
 
 const formatCategoryList = (categoryList) => {
   return categoryList.map((categoryInfo) => {
@@ -20,15 +22,22 @@ const formatCategoryList = (categoryList) => {
   });
 };
 
-app.get('/', async (req, res) => {
+app.get("/", async (req, res) => {
+  const query = req.query;
+
+  const searchOption = {
+    ...(!!query.option && {
+      _id: { $ne: "63cf77bd83a110fec00e6034" },
+    }),
+  };
+
   try {
-    console.log(req.headers);
-    const oldCategoryList = await categoryModel.find();
+    const oldCategoryList = await categoryModel.find(searchOption);
     const categoryList = formatCategoryList(oldCategoryList);
 
     res.status(200).json({ categoryList });
   } catch (err) {
-    res.status(500).json({ message: '서버요청 실패' });
+    res.status(500).json({ message: "서버요청 실패" });
   }
 });
 
