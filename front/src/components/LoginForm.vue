@@ -39,9 +39,7 @@ export default defineComponent({
       try {
         const {
           data: { data },
-        } = await this.$axios.post("api/auth/login", body, {
-          withCredentials: true,
-        });
+        } = await this.$axios.post("api/auth/login", body);
 
         this.$store.commit("setData", data);
         this.$router.push("/");
