@@ -1,4 +1,5 @@
 <template>
+  <Loading v-if="IsLoggedIn" />
   <div class="wrap">
     <div class="margin"></div>
     <div class="container">
@@ -10,13 +11,26 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { computed, defineComponent } from "vue";
 import BaseHeader from "./components/BaseHeader.vue";
+import Loading from "./components/Loading.vue";
+import { useStore } from "vuex";
 
 export default defineComponent({
   name: "App",
   components: {
     BaseHeader,
+    Loading,
+  },
+  setup() {
+    const store = useStore();
+    const IsLoggedIn = computed(
+      () => store.getters["loadingState/getIsLoading"]
+    );
+
+    return {
+      IsLoggedIn,
+    };
   },
 });
 </script>

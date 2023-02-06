@@ -18,6 +18,10 @@ export const loadingState: Module<LoadingState, RootState> = {
       state.isLoading = false;
     },
   },
-  getters: {},
+  getters: {
+    getIsLoading(state) {
+      return state.isLoading;
+    },
+  },
   actions: {},
 };

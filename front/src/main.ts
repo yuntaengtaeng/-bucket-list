@@ -2,9 +2,7 @@ import { createApp } from "vue";
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";
-import { Store } from "vuex";
 import axios from "axios";
-import { UserInfo } from "./types/service";
 
 // // TODO : 폴더 분리하기
 declare module "vue" {
@@ -13,18 +11,11 @@ declare module "vue" {
   }
 }
 
-// declare module "@vue/runtime-core" {
-//   // declare your own store states
-
-//   // provide typings for `this.$store`
-//   interface ComponentCustomProperties {
-//     $store: Store<UserInfo>;
-//   }
-// }
-
 const app = createApp(App);
 axios.defaults.baseURL = process.env.VUE_APP_API_BASE_URI;
 axios.interceptors.request.use((request) => {
+  store.commit("loadingState/onLoading");
+
   const accessToken = store.getters["userState/getAccessToken"];
 
   if (accessToken) {
@@ -38,6 +29,7 @@ axios.interceptors.request.use((request) => {
 
 axios.interceptors.response.use(
   (response) => {
+    store.commit("loadingState/offLoading");
     return response;
   },
   async (error) => {
@@ -62,11 +54,12 @@ axios.interceptors.response.use(
             },
           }
         );
-        store.commit("setAccessToken", data.accessToken);
+        store.commit("userState/setAccessToken", data.accessToken);
 
         return axios(originalRequest);
       }
     }
+    store.commit("loadingState/offLoading");
     return Promise.reject(error);
   }
 );
