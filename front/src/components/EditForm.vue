@@ -29,7 +29,6 @@ export default defineComponent({
     try {
       const { data } = await this.$axios.get("/api/category");
       const categoryList: CategoryList[] = data.categoryList;
-      console.log(categoryList);
       this.categorys = categoryList;
     } catch (error) {
       const errorResponse = (error as AxiosError).response;
@@ -62,9 +61,11 @@ export default defineComponent({
       deep: true,
       immediate: true,
       handler(data: BucketData) {
-        this.title = data.title;
-        this.categoryID = data.categoryID;
-        this.context = data.context;
+        if (data) {
+          this.title = data.title;
+          this.categoryID = data.categoryID;
+          this.context = data.context;
+        }
       },
     },
   },
