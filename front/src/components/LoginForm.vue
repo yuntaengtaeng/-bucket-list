@@ -13,17 +13,28 @@
   </form>
 </template>
 <script lang="ts">
-import { ErrorData } from "@/types/service";
+import { ErrorData, UserInfo } from "@/types/service";
 import { AxiosError } from "axios";
 import { defineComponent } from "vue";
 import CustomButton from "./CustomButton.vue";
 import CustomInput from "./CustomInput.vue";
+import { useStore } from "vuex";
 
 export default defineComponent({
   name: "login-form",
   components: {
     CustomButton,
     CustomInput,
+  },
+  setup() {
+    const store = useStore();
+    const userStateSetData = (data: UserInfo) => {
+      store.commit("userState/setData", data);
+    };
+
+    return {
+      userStateSetData,
+    };
   },
   data: () => ({
     id: "",
@@ -41,7 +52,7 @@ export default defineComponent({
           data: { data },
         } = await this.$axios.post("api/auth/login", body);
 
-        this.$store.commit("setData", data);
+        this.userStateSetData(data);
         this.$router.push("/");
       } catch (error) {
         const errorResponse = (error as AxiosError).response;

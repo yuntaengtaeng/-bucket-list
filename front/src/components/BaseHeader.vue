@@ -9,21 +9,26 @@
   </header>
 </template>
 <script lang="ts">
-import { defineComponent } from "vue";
+import { computed, defineComponent } from "vue";
+import { useStore } from "vuex";
 
 export default defineComponent({
   name: "base-header",
-  computed: {
-    IsLoggedIn() {
-      return this.$store.getters.getIsLoggedIn;
-    },
-    nickname() {
-      return this.$store.getters.getNickname;
-    },
+  setup() {
+    const store = useStore();
+    const IsLoggedIn = computed(() => store.getters["userState/getIsLoggedIn"]);
+    const nickname = computed(() => store.getters["userState/getNickname"]);
+    const logout = () => store.commit("userState/initData");
+
+    return {
+      IsLoggedIn,
+      nickname,
+      logout,
+    };
   },
   methods: {
     logoutHandler() {
-      this.$store.commit("initData");
+      this.logout();
     },
     homeClickHandler() {
       this.$router.push("/");

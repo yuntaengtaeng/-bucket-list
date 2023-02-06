@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import HomeView from "../views/HomeView.vue";
-import { store } from "@/store";
+import store from "@/store";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -43,7 +43,9 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   if (to.meta.needsAuth) {
-    const isLoggedIn = store.getters.getIsLoggedIn;
+    const isLoggedIn = store.getters["userState/getIsLoggedIn"];
+
+    console.log(isLoggedIn);
     if (isLoggedIn) {
       next();
     } else {

@@ -38,7 +38,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { computed, defineComponent } from "vue";
 
 import { CategoryList, ErrorData, BucketData, Count } from "@/types/service";
 
@@ -48,6 +48,7 @@ import BucketItem from "@/components/BucketItem.vue";
 import BucketTotal from "@/components/BucketTotal.vue";
 import Guidance from "@/components/Guidance.vue";
 import { AxiosError } from "axios";
+import { useStore } from "vuex";
 
 export default defineComponent({
   name: "HomeView",
@@ -57,6 +58,15 @@ export default defineComponent({
     BucketItem,
     BucketTotal,
     Guidance,
+  },
+
+  setup() {
+    const store = useStore();
+    const accessToken = computed(
+      () => store.getters["userState/getAccessToken"]
+    );
+
+    return { accessToken };
   },
   data: () => ({
     selectedCategoryId: "" as string,
@@ -113,11 +123,10 @@ export default defineComponent({
       }
     },
     async requestBucketList() {
-      const accessToken = this.$store.getters.getAccessToken;
+      const accessToken = this.accessToken;
       if (!accessToken) {
         return;
       }
-
       this.processAfterRequestFromServer({
         url: `/api/main/bucklist/${this.selectedCategoryId}`,
         method: "get",
